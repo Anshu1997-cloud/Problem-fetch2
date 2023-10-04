@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    function CustomArray(){
+
+        this.stack = [];
+
+        this.size = arguments.length;
+
+        for(let i = 0; i < arguments.length; i++){
+
+            this.stack[i] = arguments[i];
+        }
+    }
+
+    CustomArray.prototype.push = function(element) {
+        this.stack.push(element);
+        this.size++;
+    }
+
+    CustomArray.prototype.pop = function() {
+         
+        if(this.size > 0){
+            const poppedElement = this.stack.pop();
+            this.size--;
+            return poppedElement;
+        }
+        return undefined;
+    }
+
+    CustomArray.prototype.top = function() {
+
+        if(this.size > 0) {
+            return this.stack[this.size - 1];
+        }
+        return undefined
+    };
+
+    CustomArray.prototype.print = function() {
+        console.log('[' + this.stack.join(',') + ']');
+    }
+
+    CustomArray.prototype.printReverse = function() {
+        console.log('[' + this.stack.reverse().join(',') + ']');
+    }
+
+    CustomArray.prototype.getSize = function() {
+        return this.size;
+    }
+
+    const myStack = new CustomArray(1,2,3,4,5);
+    myStack.push(6);
+    myStack.print();
+    myStack.pop();
+    myStack.print();
+    console.log(myStack.top());
+    console.log(myStack.getSize());
+    myStack.printReverse();
+</script>
+</body>
+</html>
