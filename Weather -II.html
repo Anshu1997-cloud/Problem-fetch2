@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+       body{
+    background-repeat: no-repeat;
+  text-align: center;
+  padding : 10%;
+   }
+ 
+   .container{
+      background-color: #fff;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      border-radius : 8px;
+      width : 80%;
+      max-width: 1200px;
+      overflow: hidden;
+      display : flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+   }
+input[type ="text"]{
+    width : 100%;
+    padding: 12px, 20px;
+    margin : 8px 0;
+    box-sizing: border-box;
+    border : 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+input[type ="text"]:focus{
+    border-color: #007BFF;
+    outline: none;
+}
+button{
+    background-color: #007BFF;
+    border-radius: 20%;
+}
+button:hover{
+    background-color: blueviolet;
+}
+</style>
+<body>
+    <div class = "container">
+        <input type = "text" id ="cityInput" placeholder="Entercity ....">
+        <button onclick = "fetchWeather()">Search</button>
+ 
+     <div class = "left">
+         <div id ="weatherDetails">
+              <img  id ="weatherIcon" src ="" alt = "Weather Icon">
+              <p>Min Temp: <span id ="minTemp"></span></p>
+              <p>Max Temp: <span id ="maxTemp"></span></p>
+              <p>Wind: <span id ="wind"></span></p>
+              <p>Clouds: <span id ="clouds"></span></p>
+              <p>Sunrise: <span id ="sunrise"></span></p>
+              <p>Sunset: <span id ="sunset"></span></p>
+         </div>
+     </div>
+ 
+     <div class ="right">
+          <iframe id ="googleMap" src ="" frameborder ="0"></iframe>
+     </div>
+
+ </div>
+ <div class ="forecast-container">
+      <h2>5 Day Forecast</h2>
+      <div class ="forecast-days" id ="forecastDays">
+
+      </div>
+ </div>
+</body>
+<script>
+    //  weather - await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API key}`);
+// google -const googleMapUrl = `https://www.openstreetmap.org/export/embed.html?layer=mapnik&marker=${data.coord.lat},${data.coord.lon}`;
+// forecast - await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${APIkey}&units=metric`)
+
+async function fetchWeather(){
+    try{
+        let APIkey = '8e40e7bfc0ab1c71795f9cec4c91358b';
+        let city = document.getElementById('cityInput').value;
+
+        let res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIkey}`);
+        let data = await res.json();
+        console.log(data);
+
+        let iconId = data.weather[0].icon;
+        let iconUrl = `http://openweathermap.org/img/wn/${iconId}.png`;
+        document.getElementById("weatherIcon").src = iconUrl;
+        document.getElementById("minTemp").innerText = data.main.temp_min;
+        document.getElementById("maxTemp").innerText = data.main.temp_max;
+        document.getElementById("wind").innerText = data.wind.speed;
+        document.getElementById("clouds").innerText = data.clouds.all;
+        document.getElementById("sunrise").innerText = new Date(data.sys.sunrise *1000).toLocaleTimeString();
+        document.getElementById("sunset").innerText = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+
+        const googleMapUrl = `https://www.openstreetmap.org/export/embed.html?layer=mapnik&marker=${data.coord.lat},${data.coord.lon}`;
+
+        document.getElementById("googleMap").src = googleMapUrl;
+
+        getForecastData(city);
+    }catch(error){
+        console.log("Error in Fetching Data", error)
+    }
+}
+
+async function getForecastData(city){
+
+    try{
+        let APIkey ='8e40e7bfc0ab1c71795f9cec4c91358b';
+        let city = document.getElementById('cityInput').value;
+
+        let res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${APIkey}&units=metric`)
+        let data = await res.json();
+        console.log(data);
+        
+      
+
+        const dailyData = data.list.filter((item , index) => index % 8 === 0);
+        dailyData.forEach((day , idx) => {
+            if(idx < 5){
+                const temp = day.main.temp;
+                const icon = day.weather[0].icon;
+                const date = new Date(day.dt_txt).toLocaleDateString();
+
+               
+                const forecastEls = document.getElementById('forecastDays');
+                forecastEls.innerHTML = ' ';
+                forecastEls.innerHTML += 
+                  `<div class ="forecast-day">
+                        <div class= "forecast-date">${date}</div>
+                        <div class= "forecast-icon">
+                            <img src="http://openweathermap.org/img/w/${icon}.png" alt ="Weather Icon">
+                            </div>
+                            <div class = "forecast-temp">${temp}°C</div>
+                            </div>
+                            `;
+            }
+        })
+            
+        }
+    catch(error){
+        console.log("Error in fetching data " , error)
+    }
+}
+</script>
+</html>
