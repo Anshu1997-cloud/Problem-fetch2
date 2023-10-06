@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #root{
+       text-align: center;
+       padding: 20%;
+       background-color: aqua;
+       display: flex;
+       gap : 5px;
+       font-size: large;
+       font-weight: bold;
+       grid-template-columns: repeat(1,2fr);
+       box-shadow:  10px 5px 5px red;;
+    }
+</style>
+<body>
+    <h1>Custom Array Functionality</h1>
+    <div  id = "root"></div>
+</body>
+<script>
+    class CustomArray{
+
+        constructor(...elements){
+
+            this.stack=[];
+
+            this.size = arguments.length;
+
+            for(let i=0; i < arguments.length; i++){
+
+                    this.stack[i] = arguments[i]
+            }
+            console.log(this)
+        }
+
+        push(element){
+    this.stack.push(element);
+          this.size++;
+      let rootElement =  document.getElementById('root');
+      let topic = document.createElement('div');
+      topic.textContent = `They Original Array After Adding element: ${this.stack}`;
+      rootElement.append(topic)
+        }
+
+        pop(element){
+            if(this.size > 0){
+                const poppedElement = this.stack.pop();
+                this.size--;
+                let RootElement =  document.getElementById('root');
+                let Header = document.createElement('div');
+                Header.textContent = `They Original Array After Pooping Element : ${this.stack}`;
+                RootElement.append(Header);
+                return poppedElement;
+               
+            }
+            return undefined;
+        }
+
+        top(element){
+            if(this.size > 0) {
+
+                let Rootelement =  document.getElementById('root');
+                let HeadeR = document.createElement('div');
+                HeadeR.textContent = `They Topped Element : ${this.stack[this.size-1]}`
+                Rootelement.append(HeadeR);
+
+            return this.stack[this.size - 1];
+        }
+        return undefined
+        }
+
+        print(){
+            let Rootelement1 =  document.getElementById('root');
+                let HeadeR1 = document.createElement('div');
+                HeadeR1.textContent = `They printed Element : ${'[' + this.stack.join(',') + ']'}`
+                Rootelement1.append(HeadeR1);
+
+            console.log('[' + this.stack.join(',') + ']');
+        }
+
+        printReverse(){
+            let Rootelement2 =  document.getElementById('root');
+                let HeadeR2 = document.createElement('div');
+                HeadeR2.textContent = `They Reverse printed Element : ${'[' + this.stack.reverse().join(',') + ']'}`
+                Rootelement2.append(HeadeR2);
+
+            console.log('[' + this.stack.reverse().join(',') + ']');
+        }
+
+        getSize(){
+            let Rootelement3 =  document.getElementById('root');
+                let HeadeR3 = document.createElement('div');
+                HeadeR3.textContent = `They full Size of Array : ${this.size}`
+                Rootelement3.append(HeadeR3);
+
+            return this.size;
+        }
+    }
+
+    const arr = new CustomArray(1,2,3,4)
+    arr.push(5);
+    arr.print();
+    arr.pop();
+    arr.print();
+    console.log(arr.top());
+    console.log(arr.getSize());
+    arr.printReverse();
+</script>
+</html>
